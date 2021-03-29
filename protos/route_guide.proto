@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+service DistributedSearch {
+   // (Method definitions not shown)
+	rpc AskQuery(Query) returns (stream Result) {}
+}
+
+message Query
+{
+	string query=1;
+}
+
+message Result
+{
+	int32 docid=1;
+	string title=2;
+}
