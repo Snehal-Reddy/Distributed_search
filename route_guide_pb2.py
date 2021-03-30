@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"&\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t24\n\x11\x44istributedSearch\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"&\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t2,\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x32+\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x62\x06proto3'
 )
 
 
@@ -115,19 +115,19 @@ _sym_db.RegisterMessage(Result)
 
 
 
-_DISTRIBUTEDSEARCH = _descriptor.ServiceDescriptor(
-  name='DistributedSearch',
-  full_name='DistributedSearch',
+_QUERYNODE = _descriptor.ServiceDescriptor(
+  name='QueryNode',
+  full_name='QueryNode',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=85,
-  serialized_end=137,
+  serialized_end=129,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
-    full_name='DistributedSearch.AskQuery',
+    full_name='QueryNode.AskQuery',
     index=0,
     containing_service=None,
     input_type=_QUERY,
@@ -136,8 +136,34 @@ _DISTRIBUTEDSEARCH = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
 ])
-_sym_db.RegisterServiceDescriptor(_DISTRIBUTEDSEARCH)
+_sym_db.RegisterServiceDescriptor(_QUERYNODE)
 
-DESCRIPTOR.services_by_name['DistributedSearch'] = _DISTRIBUTEDSEARCH
+DESCRIPTOR.services_by_name['QueryNode'] = _QUERYNODE
+
+
+_DATANODE = _descriptor.ServiceDescriptor(
+  name='DataNode',
+  full_name='DataNode',
+  file=DESCRIPTOR,
+  index=1,
+  serialized_options=None,
+  create_key=_descriptor._internal_create_key,
+  serialized_start=131,
+  serialized_end=174,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='AskQuery',
+    full_name='DataNode.AskQuery',
+    index=0,
+    containing_service=None,
+    input_type=_QUERY,
+    output_type=_RESULT,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_DATANODE)
+
+DESCRIPTOR.services_by_name['DataNode'] = _DATANODE
 
 # @@protoc_insertion_point(module_scope)

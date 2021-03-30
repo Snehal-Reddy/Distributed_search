@@ -8,7 +8,7 @@ master_server_ip = "localhost:8099"
 while True:
 	query = input("Enter your query :")
 	channel = grpc.insecure_channel(master_server_ip)
-	stub = route_guide_pb2_grpc.DistributedSearchStub(channel)
+	stub = route_guide_pb2_grpc.QueryNodeStub(channel)
 	request = route_guide_pb2.Query(query=query.strip())
 	try:
 		responses = stub.AskQuery(request)

@@ -1,8 +1,12 @@
 syntax = "proto3";
 
-service DistributedSearch {
-   // (Method definitions not shown)
+service QueryNode {
 	rpc AskQuery(Query) returns (stream Result) {}
+}
+
+service DataNode {
+	
+	rpc AskQuery(Query)	returns (stream Result) {}
 }
 
 message Query

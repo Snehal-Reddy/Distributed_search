@@ -5,7 +5,7 @@ import grpc
 import route_guide_pb2 as route__guide__pb2
 
 
-class DistributedSearchStub(object):
+class QueryNodeStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,24 +15,23 @@ class DistributedSearchStub(object):
             channel: A grpc.Channel.
         """
         self.AskQuery = channel.unary_stream(
-                '/DistributedSearch/AskQuery',
+                '/QueryNode/AskQuery',
                 request_serializer=route__guide__pb2.Query.SerializeToString,
                 response_deserializer=route__guide__pb2.Result.FromString,
                 )
 
 
-class DistributedSearchServicer(object):
+class QueryNodeServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def AskQuery(self, request, context):
-        """(Method definitions not shown)
-        """
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_DistributedSearchServicer_to_server(servicer, server):
+def add_QueryNodeServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'AskQuery': grpc.unary_stream_rpc_method_handler(
                     servicer.AskQuery,
@@ -41,12 +40,12 @@ def add_DistributedSearchServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'DistributedSearch', rpc_method_handlers)
+            'QueryNode', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class DistributedSearch(object):
+class QueryNode(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -60,7 +59,68 @@ class DistributedSearch(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/DistributedSearch/AskQuery',
+        return grpc.experimental.unary_stream(request, target, '/QueryNode/AskQuery',
+            route__guide__pb2.Query.SerializeToString,
+            route__guide__pb2.Result.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+
+class DataNodeStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.AskQuery = channel.unary_stream(
+                '/DataNode/AskQuery',
+                request_serializer=route__guide__pb2.Query.SerializeToString,
+                response_deserializer=route__guide__pb2.Result.FromString,
+                )
+
+
+class DataNodeServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def AskQuery(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_DataNodeServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'AskQuery': grpc.unary_stream_rpc_method_handler(
+                    servicer.AskQuery,
+                    request_deserializer=route__guide__pb2.Query.FromString,
+                    response_serializer=route__guide__pb2.Result.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'DataNode', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+ # This class is part of an EXPERIMENTAL API.
+class DataNode(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def AskQuery(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/DataNode/AskQuery',
             route__guide__pb2.Query.SerializeToString,
             route__guide__pb2.Result.FromString,
             options, channel_credentials,
