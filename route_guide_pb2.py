@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"&\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t2,\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x32+\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"&\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\"\x19\n\x06Status\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\"9\n\x08\x44ocument\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t2T\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12&\n\x0c\x41\x64\x64\x44ocuments\x12\t.Document\x1a\x07.Status\"\x00(\x01\x32u\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12&\n\x0cWriteRequest\x12\t.Document\x1a\x07.Status\"\x00(\x01\x12 \n\nWriteReply\x12\x07.Status\x1a\x07.Status\"\x00\x62\x06proto3'
 )
 
 
@@ -95,8 +95,88 @@ _RESULT = _descriptor.Descriptor(
   serialized_end=83,
 )
 
+
+_STATUS = _descriptor.Descriptor(
+  name='Status',
+  full_name='Status',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='content', full_name='Status.content', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=85,
+  serialized_end=110,
+)
+
+
+_DOCUMENT = _descriptor.Descriptor(
+  name='Document',
+  full_name='Document',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='docid', full_name='Document.docid', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='title', full_name='Document.title', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='content', full_name='Document.content', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=112,
+  serialized_end=169,
+)
+
 DESCRIPTOR.message_types_by_name['Query'] = _QUERY
 DESCRIPTOR.message_types_by_name['Result'] = _RESULT
+DESCRIPTOR.message_types_by_name['Status'] = _STATUS
+DESCRIPTOR.message_types_by_name['Document'] = _DOCUMENT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Query = _reflection.GeneratedProtocolMessageType('Query', (_message.Message,), {
@@ -113,6 +193,20 @@ Result = _reflection.GeneratedProtocolMessageType('Result', (_message.Message,),
   })
 _sym_db.RegisterMessage(Result)
 
+Status = _reflection.GeneratedProtocolMessageType('Status', (_message.Message,), {
+  'DESCRIPTOR' : _STATUS,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:Status)
+  })
+_sym_db.RegisterMessage(Status)
+
+Document = _reflection.GeneratedProtocolMessageType('Document', (_message.Message,), {
+  'DESCRIPTOR' : _DOCUMENT,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:Document)
+  })
+_sym_db.RegisterMessage(Document)
+
 
 
 _QUERYNODE = _descriptor.ServiceDescriptor(
@@ -122,8 +216,8 @@ _QUERYNODE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=85,
-  serialized_end=129,
+  serialized_start=171,
+  serialized_end=255,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -132,6 +226,16 @@ _QUERYNODE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_QUERY,
     output_type=_RESULT,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='AddDocuments',
+    full_name='QueryNode.AddDocuments',
+    index=1,
+    containing_service=None,
+    input_type=_DOCUMENT,
+    output_type=_STATUS,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -148,8 +252,8 @@ _DATANODE = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=131,
-  serialized_end=174,
+  serialized_start=257,
+  serialized_end=374,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -158,6 +262,26 @@ _DATANODE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_QUERY,
     output_type=_RESULT,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='WriteRequest',
+    full_name='DataNode.WriteRequest',
+    index=1,
+    containing_service=None,
+    input_type=_DOCUMENT,
+    output_type=_STATUS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='WriteReply',
+    full_name='DataNode.WriteReply',
+    index=2,
+    containing_service=None,
+    input_type=_STATUS,
+    output_type=_STATUS,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

@@ -22,4 +22,7 @@ def perform_search(query,data):
 	titles = "abcdefghij"
 	return [route_guide_pb2.Result(docid=i,title=titles[i]) for i in range(10)]
 
+def add_documents(request_iterator):
+	## Raise exception if errors
+	return
 
