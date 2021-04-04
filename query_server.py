@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 import math
 import logging
+import json
 
 import grpc
 import route_guide_pb2
@@ -29,48 +30,53 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 	def __init__(self,kind):
 		super(QueryNode,self).__init__()
 		self.kind = kind
-		self.data_partitions = 0
-		self.data_node_details = {}
-		self.partition_sizes = {} 	# to decide the minimum size partition to insert the documents to
-		self.docid_partition = {}	#maps docid to partition number. All datanodes with this partition number have the document with docid
-		## Format : key = partition number, 
-		## value = list of data nodes, each element is a dict having ip, pending_requests
-		self.add_dummy_partition_details()
+		fp = open("metadata.json", 'r')
+		self.partitions = json.load(fp)
+		fp.close()
 		self.commit_logs = []
 		
 
-	def AskQuery(self,request,context):
-		"""
-		To-DO : use threads to send all requests to data nodes in parallel
-		"""
+	def AskQuery(self, request, context):
+
+		# To-DO : use threads to send all requests to data nodes in parallel
 		query_string = request.query
-		print("Received query string : ",query_string)
+		print("Received query string : ", query_string)
 		preprocessed_query = preprocess_query(query_string)
 		## Now send to all data nodes
 		all_responses = []
-		for partition_no in range(self.data_partitions):
-			data_nodes = self.data_node_details[partition_no]
-			min_load = 0
-			for i,node in enumerate(data_nodes):
-				if node["pending_requests"] < data_nodes[min_load]["pending_requests"]:
-					min_load = i
-			data_nodes[min_load]["pending_requests"] += 1
-			channel = grpc.insecure_channel(data_nodes[min_load]["ip"])
-			stub = route_guide_pb2_grpc.DataNodeStub(channel)
-			request = route_guide_pb2.Query(query=preprocessed_query)
-			try:
-				responses = stub.AskQuery(request)
-				print("For partition no %d : "%(partition_no))
-				received_responses = []
-				for response in responses:
-					print("ID %d Title %s : "%(response.docid,response.title))
-					received_responses.append(response)
-			except Exception as e:		## To-Do => Try with different data nodes of same partition
-				print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no,data_nodes[min_load]["ip"],e))
-				exit()
-
-			all_responses.append(received_responses)
-			data_nodes[min_load]["pending_requests"] -= 1
+		for partition_no, partition in enumerate(self.partitions):
+			print("For partition no %d:"%(partition_no))
+			data_nodes = partition['node_list']
+			idx = []
+			load = []
+			for i, node in enumerate(data_nodes):
+				if node["status"] > 0:
+					idx.append(i)
+					load.append(node["pending_requests"])
+			if len(idx) > 0:
+				load, idx = zip(*sorted(zip(load, idx)))
+		
+			answered = False
+			for i in idx:
+				data_nodes[i]["pending_requests"] += 1
+				channel = grpc.insecure_channel(data_nodes[i]["ip"])
+				stub = route_guide_pb2_grpc.DataNodeStub(channel)
+				request = route_guide_pb2.Query(query=preprocessed_query)
+				try:
+					responses = stub.AskQuery(request)
+					for response in responses:
+						print("ID: %d Title: %s Score: %f"%(response.docid, response.title, response.score))
+						all_responses.append(response)
+					answered = True
+					data_nodes[i]["pending_requests"] -= 1
+					break
+				except grpc.RpcError as e:		
+					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, data_nodes[i]["ip"], e.code().name))
+					data_nodes[i]["status"] = -1
+			if answered == False:
+				print("No response from partition %d!"%(partition_no))
+				# To-DO : How do we handle this
+			partition['node_list'] = data_nodes 
 
 		final_result = aggregate_results(all_responses)
 		for res in final_result:
@@ -79,11 +85,16 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 	def DeleteDocuments(self,request,context):
 		docid = int(request.docid)
 		print('Deleting doc with id: ',docid)
-		if docid not in self.docid_partition:
+		partition_no = -1
+		for pno, partition in enumerate(self.partitions):
+			if docid in partition['doc_list']:
+				partition_no = pno
+		if partition_no == -1:
 			print('Invalid docid')
-			return  route_guide_pb2.Status(content='DNE')
+			yield  route_guide_pb2.Status(content='DNE')
+			return
+
 		commit = True
-		partition_no = self.docid_partition[docid]		#when docid doesn't exist?
 
 		for data_node in self.data_node_details[partition_no]:
 			channel = grpc.insecure_channel(data_node["ip"])
@@ -93,9 +104,10 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 				if commit_request_response.content=='ABORT':
 					commit = False
 					print("Query server received ABORT from data node -> %s",data_node["ip"])
-			except Exception as e:		
-				print("Error with data node",partition_no,data_node["ip"],e)
-				exit()
+			except grpc.RpcError as e:		
+				print("Error with data node",partition_no,data_node["ip"], e.code().name)
+				commit = False
+
 		commit_message = None
 		if commit==True:
 			self.commit_logs.append("commit")
@@ -247,7 +259,7 @@ def serve():
 		while True:
 			time.sleep(60 * 60 * 24)
 	except KeyboardInterrupt:
-		print("stopping server")
+		print("Stopping server ...")
 		server.stop(0)
 
 validate_arguments()

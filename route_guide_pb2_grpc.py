@@ -24,7 +24,7 @@ class QueryNodeStub(object):
                 request_serializer=route__guide__pb2.Document.SerializeToString,
                 response_deserializer=route__guide__pb2.Status.FromString,
                 )
-        self.DeleteDocuments = channel.unary_unary(
+        self.DeleteDocuments = channel.stream_unary(
                 '/QueryNode/DeleteDocuments',
                 request_serializer=route__guide__pb2.DocumentId.SerializeToString,
                 response_deserializer=route__guide__pb2.Status.FromString,
@@ -51,7 +51,7 @@ class QueryNodeServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def DeleteDocuments(self, request, context):
+    def DeleteDocuments(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -76,7 +76,7 @@ def add_QueryNodeServicer_to_server(servicer, server):
                     request_deserializer=route__guide__pb2.Document.FromString,
                     response_serializer=route__guide__pb2.Status.SerializeToString,
             ),
-            'DeleteDocuments': grpc.unary_unary_rpc_method_handler(
+            'DeleteDocuments': grpc.stream_unary_rpc_method_handler(
                     servicer.DeleteDocuments,
                     request_deserializer=route__guide__pb2.DocumentId.FromString,
                     response_serializer=route__guide__pb2.Status.SerializeToString,
@@ -131,7 +131,7 @@ class QueryNode(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def DeleteDocuments(request,
+    def DeleteDocuments(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -141,7 +141,7 @@ class QueryNode(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/QueryNode/DeleteDocuments',
+        return grpc.experimental.stream_unary(request_iterator, target, '/QueryNode/DeleteDocuments',
             route__guide__pb2.DocumentId.SerializeToString,
             route__guide__pb2.Status.FromString,
             options, channel_credentials,
@@ -189,7 +189,7 @@ class DataNodeStub(object):
                 request_serializer=route__guide__pb2.Status.SerializeToString,
                 response_deserializer=route__guide__pb2.Status.FromString,
                 )
-        self.DeleteRequest = channel.unary_unary(
+        self.DeleteRequest = channel.stream_unary(
                 '/DataNode/DeleteRequest',
                 request_serializer=route__guide__pb2.DocumentId.SerializeToString,
                 response_deserializer=route__guide__pb2.Status.FromString,
@@ -227,7 +227,7 @@ class DataNodeServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def DeleteRequest(self, request, context):
+    def DeleteRequest(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -263,7 +263,7 @@ def add_DataNodeServicer_to_server(servicer, server):
                     request_deserializer=route__guide__pb2.Status.FromString,
                     response_serializer=route__guide__pb2.Status.SerializeToString,
             ),
-            'DeleteRequest': grpc.unary_unary_rpc_method_handler(
+            'DeleteRequest': grpc.stream_unary_rpc_method_handler(
                     servicer.DeleteRequest,
                     request_deserializer=route__guide__pb2.DocumentId.FromString,
                     response_serializer=route__guide__pb2.Status.SerializeToString,
@@ -340,7 +340,7 @@ class DataNode(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def DeleteRequest(request,
+    def DeleteRequest(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -350,7 +350,7 @@ class DataNode(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DataNode/DeleteRequest',
+        return grpc.experimental.stream_unary(request_iterator, target, '/DataNode/DeleteRequest',
             route__guide__pb2.DocumentId.SerializeToString,
             route__guide__pb2.Status.FromString,
             options, channel_credentials,
