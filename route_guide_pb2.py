@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"&\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t2,\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x32+\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"&\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\"\x19\n\x06Status\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\"9\n\x08\x44ocument\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"\x1b\n\nDocumentId\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\"!\n\x0f\x41\x63knowledgement\x12\x0e\n\x06status\x18\x07 \x01(\x05\"\x16\n\x08IsMaster\x12\n\n\x02ip\x18\x01 \x01(\t\")\n\x12HealthCheckRequest\x12\x13\n\x0bhealthCheck\x18\x01 \x01(\t\"3\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xab\x01\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12&\n\x0c\x41\x64\x64\x44ocuments\x12\t.Document\x1a\x07.Status\"\x00(\x01\x12)\n\x0f\x44\x65leteDocuments\x12\x0b.DocumentId\x1a\x07.Status\"\x00\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\xed\x01\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12&\n\x0cWriteRequest\x12\t.Document\x1a\x07.Status\"\x00(\x01\x12 \n\nWriteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12\'\n\rDeleteRequest\x12\x0b.DocumentId\x1a\x07.Status\"\x00\x12!\n\x0b\x44\x65leteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\x41\n\x0bHealthCheck\x12\x32\n\x05\x43heck\x12\x13.HealthCheckRequest\x1a\x14.HealthCheckResponse2;\n\x0cLeaderNotice\x12+\n\x0cMasterChange\x12\t.IsMaster\x1a\x10.Acknowledgementb\x06proto3'
 )
 
 
@@ -95,8 +95,260 @@ _RESULT = _descriptor.Descriptor(
   serialized_end=83,
 )
 
+
+_STATUS = _descriptor.Descriptor(
+  name='Status',
+  full_name='Status',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='content', full_name='Status.content', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=85,
+  serialized_end=110,
+)
+
+
+_DOCUMENT = _descriptor.Descriptor(
+  name='Document',
+  full_name='Document',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='docid', full_name='Document.docid', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='title', full_name='Document.title', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='content', full_name='Document.content', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=112,
+  serialized_end=169,
+)
+
+
+_DOCUMENTID = _descriptor.Descriptor(
+  name='DocumentId',
+  full_name='DocumentId',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='docid', full_name='DocumentId.docid', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=171,
+  serialized_end=198,
+)
+
+
+_ACKNOWLEDGEMENT = _descriptor.Descriptor(
+  name='Acknowledgement',
+  full_name='Acknowledgement',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='status', full_name='Acknowledgement.status', index=0,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=200,
+  serialized_end=233,
+)
+
+
+_ISMASTER = _descriptor.Descriptor(
+  name='IsMaster',
+  full_name='IsMaster',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='ip', full_name='IsMaster.ip', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=235,
+  serialized_end=257,
+)
+
+
+_HEALTHCHECKREQUEST = _descriptor.Descriptor(
+  name='HealthCheckRequest',
+  full_name='HealthCheckRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='healthCheck', full_name='HealthCheckRequest.healthCheck', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=259,
+  serialized_end=300,
+)
+
+
+_HEALTHCHECKRESPONSE = _descriptor.Descriptor(
+  name='HealthCheckResponse',
+  full_name='HealthCheckResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='status', full_name='HealthCheckResponse.status', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='HealthCheckResponse.data', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=302,
+  serialized_end=353,
+)
+
 DESCRIPTOR.message_types_by_name['Query'] = _QUERY
 DESCRIPTOR.message_types_by_name['Result'] = _RESULT
+DESCRIPTOR.message_types_by_name['Status'] = _STATUS
+DESCRIPTOR.message_types_by_name['Document'] = _DOCUMENT
+DESCRIPTOR.message_types_by_name['DocumentId'] = _DOCUMENTID
+DESCRIPTOR.message_types_by_name['Acknowledgement'] = _ACKNOWLEDGEMENT
+DESCRIPTOR.message_types_by_name['IsMaster'] = _ISMASTER
+DESCRIPTOR.message_types_by_name['HealthCheckRequest'] = _HEALTHCHECKREQUEST
+DESCRIPTOR.message_types_by_name['HealthCheckResponse'] = _HEALTHCHECKRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Query = _reflection.GeneratedProtocolMessageType('Query', (_message.Message,), {
@@ -113,6 +365,55 @@ Result = _reflection.GeneratedProtocolMessageType('Result', (_message.Message,),
   })
 _sym_db.RegisterMessage(Result)
 
+Status = _reflection.GeneratedProtocolMessageType('Status', (_message.Message,), {
+  'DESCRIPTOR' : _STATUS,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:Status)
+  })
+_sym_db.RegisterMessage(Status)
+
+Document = _reflection.GeneratedProtocolMessageType('Document', (_message.Message,), {
+  'DESCRIPTOR' : _DOCUMENT,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:Document)
+  })
+_sym_db.RegisterMessage(Document)
+
+DocumentId = _reflection.GeneratedProtocolMessageType('DocumentId', (_message.Message,), {
+  'DESCRIPTOR' : _DOCUMENTID,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:DocumentId)
+  })
+_sym_db.RegisterMessage(DocumentId)
+
+Acknowledgement = _reflection.GeneratedProtocolMessageType('Acknowledgement', (_message.Message,), {
+  'DESCRIPTOR' : _ACKNOWLEDGEMENT,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:Acknowledgement)
+  })
+_sym_db.RegisterMessage(Acknowledgement)
+
+IsMaster = _reflection.GeneratedProtocolMessageType('IsMaster', (_message.Message,), {
+  'DESCRIPTOR' : _ISMASTER,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:IsMaster)
+  })
+_sym_db.RegisterMessage(IsMaster)
+
+HealthCheckRequest = _reflection.GeneratedProtocolMessageType('HealthCheckRequest', (_message.Message,), {
+  'DESCRIPTOR' : _HEALTHCHECKREQUEST,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:HealthCheckRequest)
+  })
+_sym_db.RegisterMessage(HealthCheckRequest)
+
+HealthCheckResponse = _reflection.GeneratedProtocolMessageType('HealthCheckResponse', (_message.Message,), {
+  'DESCRIPTOR' : _HEALTHCHECKRESPONSE,
+  '__module__' : 'route_guide_pb2'
+  # @@protoc_insertion_point(class_scope:HealthCheckResponse)
+  })
+_sym_db.RegisterMessage(HealthCheckResponse)
+
 
 
 _QUERYNODE = _descriptor.ServiceDescriptor(
@@ -122,8 +423,8 @@ _QUERYNODE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=85,
-  serialized_end=129,
+  serialized_start=356,
+  serialized_end=527,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -132,6 +433,36 @@ _QUERYNODE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_QUERY,
     output_type=_RESULT,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='AddDocuments',
+    full_name='QueryNode.AddDocuments',
+    index=1,
+    containing_service=None,
+    input_type=_DOCUMENT,
+    output_type=_STATUS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DeleteDocuments',
+    full_name='QueryNode.DeleteDocuments',
+    index=2,
+    containing_service=None,
+    input_type=_DOCUMENTID,
+    output_type=_STATUS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='FetchDocuments',
+    full_name='QueryNode.FetchDocuments',
+    index=3,
+    containing_service=None,
+    input_type=_DOCUMENTID,
+    output_type=_DOCUMENT,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -148,8 +479,8 @@ _DATANODE = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=131,
-  serialized_end=174,
+  serialized_start=530,
+  serialized_end=767,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -161,9 +492,111 @@ _DATANODE = _descriptor.ServiceDescriptor(
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
+  _descriptor.MethodDescriptor(
+    name='WriteRequest',
+    full_name='DataNode.WriteRequest',
+    index=1,
+    containing_service=None,
+    input_type=_DOCUMENT,
+    output_type=_STATUS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='WriteReply',
+    full_name='DataNode.WriteReply',
+    index=2,
+    containing_service=None,
+    input_type=_STATUS,
+    output_type=_STATUS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DeleteRequest',
+    full_name='DataNode.DeleteRequest',
+    index=3,
+    containing_service=None,
+    input_type=_DOCUMENTID,
+    output_type=_STATUS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DeleteReply',
+    full_name='DataNode.DeleteReply',
+    index=4,
+    containing_service=None,
+    input_type=_STATUS,
+    output_type=_STATUS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='FetchDocuments',
+    full_name='DataNode.FetchDocuments',
+    index=5,
+    containing_service=None,
+    input_type=_DOCUMENTID,
+    output_type=_DOCUMENT,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_DATANODE)
 
 DESCRIPTOR.services_by_name['DataNode'] = _DATANODE
+
+
+_HEALTHCHECK = _descriptor.ServiceDescriptor(
+  name='HealthCheck',
+  full_name='HealthCheck',
+  file=DESCRIPTOR,
+  index=2,
+  serialized_options=None,
+  create_key=_descriptor._internal_create_key,
+  serialized_start=769,
+  serialized_end=834,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='Check',
+    full_name='HealthCheck.Check',
+    index=0,
+    containing_service=None,
+    input_type=_HEALTHCHECKREQUEST,
+    output_type=_HEALTHCHECKRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_HEALTHCHECK)
+
+DESCRIPTOR.services_by_name['HealthCheck'] = _HEALTHCHECK
+
+
+_LEADERNOTICE = _descriptor.ServiceDescriptor(
+  name='LeaderNotice',
+  full_name='LeaderNotice',
+  file=DESCRIPTOR,
+  index=3,
+  serialized_options=None,
+  create_key=_descriptor._internal_create_key,
+  serialized_start=836,
+  serialized_end=895,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='MasterChange',
+    full_name='LeaderNotice.MasterChange',
+    index=0,
+    containing_service=None,
+    input_type=_ISMASTER,
+    output_type=_ACKNOWLEDGEMENT,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_LEADERNOTICE)
+
+DESCRIPTOR.services_by_name['LeaderNotice'] = _LEADERNOTICE
 
 # @@protoc_insertion_point(module_scope)

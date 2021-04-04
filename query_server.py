@@ -5,7 +5,6 @@ import math
 import logging
 
 import grpc
-
 import route_guide_pb2
 import route_guide_pb2_grpc
 
@@ -213,6 +212,22 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 			ret_message = "NOTOK"
 		return route_guide_pb2.Status(content=ret_message)
 
+	def Check(self, request, context):
+
+		if(self.db == 'master'):
+			self.logger.debug("Received heartbeat query from backup")
+			self._HEALTH_CHECK_TIME += 1
+			return search_pb2.HealthCheckResponse(status = "STATUS: Master server up!")
+
+		# else it is a replica getting health check message from master
+		self.logger.debug("Received heartbeat query from master")
+
+		###
+		#incomplete process
+		###
+
+		return search_pb2.HealthCheckResponse(status = "Replica " + self.ip + " up!", data = indices_to_remove)
+
 
 
 
@@ -220,12 +235,20 @@ def serve():
 	server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 	query_node = QueryNode(args.kind)
 	route_guide_pb2_grpc.add_QueryNodeServicer_to_server(query_node, server)
+	route_guide_pb2_grpc.add_HealthCheckServicer_to_server(query_node, server)
 	if args.kind=="master":
 		server.add_insecure_port('[::]:50051')
 	else:
 		server.add_insecure_port('[::]:50052')		
+
 	server.start()
-	server.wait_for_termination()
+
+	try:
+		while True:
+			time.sleep(60 * 60 * 24)
+	except KeyboardInterrupt:
+		print("stopping server")
+		server.stop(0)
 
 validate_arguments()
 serve()
