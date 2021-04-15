@@ -19,6 +19,13 @@ parser.add_argument('--port', type=str, default="8081",
 args = parser.parse_args()
 port = args.port
 
+def decorator(func):
+    printer = func
+    def wrapped(*args):
+        printer(*args, end=' *\n', flush=True)
+    return wrapped
+
+print = decorator(print)
 
 
 class DataNode(route_guide_pb2_grpc.DataNodeServicer):
@@ -44,7 +51,9 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		super(DataNode,self).__init__()
 		self.query_master = grpc.insecure_channel(query_master)
 		self.query_backup = grpc.insecure_channel(query_backup)
-		self.data = self.loadData()
+		self.loadData()
+		print("INIT DATA TYPE : ",type(self.data))
+		# self.data = []
 		self.commit_logs = []
 
 	def AskQuery(self, request, context):
@@ -85,6 +94,7 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 
 # master_ip = input("Enter Master IP : ")
 # backup_ip = input("Enter Backup IP : ")
+print("DATA NODE STARTED")
 master_ip = "localhost:50051"
 backup_ip = "localhost:50052"
 def serve():
@@ -94,5 +104,4 @@ def serve():
 	server.add_insecure_port('[::]:%s'%(port))
 	server.start()
 	server.wait_for_termination()
-
 serve()

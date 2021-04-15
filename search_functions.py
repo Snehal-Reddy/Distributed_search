@@ -24,6 +24,7 @@ def perform_search(query,data):
 
 def add_documents(commit_logs,query,data):
 	## Write steps in commit log, add data and return true/false 
+	print("types : ",type(commit_logs),type(data),flush=True)
 	commit_logs.append("inserting docid %d"%query.docid)
 	data.append({"docid":query.docid,"title":query.title,"content":query.content})
 	return True

@@ -63,7 +63,7 @@ def handle_write():
 		stub = route_guide_pb2_grpc.QueryNodeStub(channel)
 		print("Trying %s ..."%(address))
 		try:
-			response = stub.AddDocuments(doc).content
+			response = stub.AddDocuments(doc)
 			print("Response:", response.content)
 			if response.content == "OK":
 				print("Write Success!")

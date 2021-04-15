@@ -227,6 +227,7 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		ret_message = "OK"
 		if send_message=="ABORT":
 			ret_message = "NOTOK"
+		print("Return obj")
 		obj = route_guide_pb2.Status(content=ret_message)
 		return obj
 
