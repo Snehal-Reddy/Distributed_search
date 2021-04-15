@@ -3,7 +3,7 @@ syntax = "proto3";
 service QueryNode {
 	rpc AskQuery(Query) returns (stream Result) {}
 	rpc AddDocuments(Document) returns (Status) {} 
-	rpc DeleteDocuments(stream DocumentId) returns (Status) {}
+	rpc DeleteDocument( DocumentId) returns (Status) {}
 	rpc FetchDocuments(DocumentId) returns (Document) {}
 }
 
@@ -12,7 +12,7 @@ service DataNode {
 	rpc AskQuery(Query)	returns (stream Result) {}
 	rpc WriteRequest(Document) returns (Status) {}
 	rpc WriteReply(Status) returns (Status) {}
-	rpc DeleteRequest(stream DocumentId) returns (Status) {}
+	rpc DeleteRequest(DocumentId) returns (Status) {}
 	rpc DeleteReply(Status) returns (Status) {}
 	rpc FetchDocuments(DocumentId) returns (Document) {}
 }
