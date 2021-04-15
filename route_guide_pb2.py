@@ -11,6 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -19,8 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"5\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\r\n\x05score\x18\x03 \x01(\x01\"\x19\n\x06Status\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\"9\n\x08\x44ocument\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"\x1b\n\nDocumentId\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\"!\n\x0f\x41\x63knowledgement\x12\x0e\n\x06status\x18\x07 \x01(\x05\"\x16\n\x08IsMaster\x12\n\n\x02ip\x18\x01 \x01(\t\")\n\x12HealthCheckRequest\x12\x13\n\x0bhealthCheck\x18\x01 \x01(\t\"3\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xab\x01\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0c\x41\x64\x64\x44ocuments\x12\t.Document\x1a\x07.Status\"\x00\x12+\n\x0f\x44\x65leteDocuments\x12\x0b.DocumentId\x1a\x07.Status\"\x00(\x01\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\xed\x01\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0cWriteRequest\x12\t.Document\x1a\x07.Status\"\x00\x12 \n\nWriteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12)\n\rDeleteRequest\x12\x0b.DocumentId\x1a\x07.Status\"\x00(\x01\x12!\n\x0b\x44\x65leteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\x41\n\x0bHealthCheck\x12\x32\n\x05\x43heck\x12\x13.HealthCheckRequest\x1a\x14.HealthCheckResponse2;\n\x0cLeaderNotice\x12+\n\x0cMasterChange\x12\t.IsMaster\x1a\x10.Acknowledgementb\x06proto3'
-)
+  serialized_pb=b'\n\x11route_guide.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"5\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\r\n\x05score\x18\x03 \x01(\x01\"\x19\n\x06Status\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\"9\n\x08\x44ocument\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"\x1b\n\nDocumentId\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\"!\n\x0f\x41\x63knowledgement\x12\x0e\n\x06status\x18\x07 \x01(\x05\"\x16\n\x08IsMaster\x12\n\n\x02ip\x18\x01 \x01(\t\")\n\x12HealthCheckRequest\x12\x13\n\x0bhealthCheck\x18\x01 \x01(\t\"3\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xa8\x01\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0c\x41\x64\x64\x44ocuments\x12\t.Document\x1a\x07.Status\"\x00\x12(\n\x0e\x44\x65leteDocument\x12\x0b.DocumentId\x1a\x07.Status\"\x00\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\x9c\x02\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0cWriteRequest\x12\t.Document\x1a\x07.Status\"\x00\x12 \n\nWriteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12\'\n\rDeleteRequest\x12\x0b.DocumentId\x1a\x07.Status\"\x00\x12!\n\x0b\x44\x65leteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x12/\n\x06getMID\x12\x16.google.protobuf.Empty\x1a\x0b.DocumentId\"\x00\x32\x41\n\x0bHealthCheck\x12\x32\n\x05\x43heck\x12\x13.HealthCheckRequest\x1a\x14.HealthCheckResponse2;\n\x0cLeaderNotice\x12+\n\x0cMasterChange\x12\t.IsMaster\x1a\x10.Acknowledgementb\x06proto3'
+  ,
+  dependencies=[google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,])
 
 
 
@@ -52,8 +54,8 @@ _QUERY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=21,
-  serialized_end=43,
+  serialized_start=50,
+  serialized_end=72,
 )
 
 
@@ -98,8 +100,8 @@ _RESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=45,
-  serialized_end=98,
+  serialized_start=74,
+  serialized_end=127,
 )
 
 
@@ -130,8 +132,8 @@ _STATUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=100,
-  serialized_end=125,
+  serialized_start=129,
+  serialized_end=154,
 )
 
 
@@ -176,8 +178,8 @@ _DOCUMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=127,
-  serialized_end=184,
+  serialized_start=156,
+  serialized_end=213,
 )
 
 
@@ -208,8 +210,8 @@ _DOCUMENTID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=186,
-  serialized_end=213,
+  serialized_start=215,
+  serialized_end=242,
 )
 
 
@@ -240,8 +242,8 @@ _ACKNOWLEDGEMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=215,
-  serialized_end=248,
+  serialized_start=244,
+  serialized_end=277,
 )
 
 
@@ -272,8 +274,8 @@ _ISMASTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=250,
-  serialized_end=272,
+  serialized_start=279,
+  serialized_end=301,
 )
 
 
@@ -304,8 +306,8 @@ _HEALTHCHECKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=274,
-  serialized_end=315,
+  serialized_start=303,
+  serialized_end=344,
 )
 
 
@@ -343,8 +345,8 @@ _HEALTHCHECKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=317,
-  serialized_end=368,
+  serialized_start=346,
+  serialized_end=397,
 )
 
 DESCRIPTOR.message_types_by_name['Query'] = _QUERY
@@ -430,8 +432,8 @@ _QUERYNODE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=371,
-  serialized_end=542,
+  serialized_start=400,
+  serialized_end=568,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -454,8 +456,8 @@ _QUERYNODE = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='DeleteDocuments',
-    full_name='QueryNode.DeleteDocuments',
+    name='DeleteDocument',
+    full_name='QueryNode.DeleteDocument',
     index=2,
     containing_service=None,
     input_type=_DOCUMENTID,
@@ -486,8 +488,8 @@ _DATANODE = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=545,
-  serialized_end=782,
+  serialized_start=571,
+  serialized_end=855,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -549,6 +551,16 @@ _DATANODE = _descriptor.ServiceDescriptor(
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
+  _descriptor.MethodDescriptor(
+    name='getMID',
+    full_name='DataNode.getMID',
+    index=6,
+    containing_service=None,
+    input_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
+    output_type=_DOCUMENTID,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_DATANODE)
 
@@ -562,8 +574,8 @@ _HEALTHCHECK = _descriptor.ServiceDescriptor(
   index=2,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=784,
-  serialized_end=849,
+  serialized_start=857,
+  serialized_end=922,
   methods=[
   _descriptor.MethodDescriptor(
     name='Check',
@@ -588,8 +600,8 @@ _LEADERNOTICE = _descriptor.ServiceDescriptor(
   index=3,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=851,
-  serialized_end=910,
+  serialized_start=924,
+  serialized_end=983,
   methods=[
   _descriptor.MethodDescriptor(
     name='MasterChange',

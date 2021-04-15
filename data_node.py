@@ -34,12 +34,12 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		# fp = open("data_%s.json"%port, 'w+')
 		# self.data = json.load(fp)
 		# fp.close()
-		with open("data_%s.json"%port,"w+") as op:
-			dc = op.read()
 
 		try:
+			with open("data_%s.json"%port,"r") as op:
+				dc = op.read()
 			self.data = json.loads(dc)
-		except json.decoder.JSONDecodeError:
+		except Exception:
 			print("Dataset invalid, resetting")
 			self.data = []
 
@@ -54,16 +54,19 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		self.loadData()
 		print("INIT DATA TYPE : ",type(self.data))
 		# self.data = []
-		self.commit_logs = []
+		self.mid = 0 		## To-Do : loadData()
+		self.commit_logs = [] 
 
 	def AskQuery(self, request, context):
-		results = perform_search(request,self.data)
+		results = perform_search(request.query,self.data)
 		for res in results:
 			yield res
 
 	def WriteRequest(self,request,context):
 		try:
 			status = add_documents(self.commit_logs,request,self.data)
+			self.mid = max(self.mid, request.docid)+1
+
 		except Exception as e:
 			print("Exception : ",e)
 		if status == True:
@@ -91,6 +94,9 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 	def FetchDocuments(self,request,content):
 		print('recvd')
 		return 	route_guide_pb2.Document(docid=1,title='title',content="Jello world")
+
+	def getMID(self, request, context):
+		return route_guide_pb2.DocumentId(docid=self.mid)
 
 # master_ip = input("Enter Master IP : ")
 # backup_ip = input("Enter Backup IP : ")

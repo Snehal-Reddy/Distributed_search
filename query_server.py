@@ -4,11 +4,11 @@ import time
 import math
 import logging
 import json
-
+import _thread
 import grpc
 import route_guide_pb2
 import route_guide_pb2_grpc
-
+from google.protobuf import empty_pb2
 from argparse import ArgumentParser
 import argparse
 
@@ -37,6 +37,11 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		self.commit_logs = []
 		self.partition_last_index = [0]*self.no_of_partitions 
 		self.last_doc_id = 0
+		if(self.kind=='backup'):
+			try:
+				_thread.start_new_thread(self.sendHeartBeatMessage, ("localhost:50051",))
+			except Exception as e:
+				print("[LOG]"+str(e))
 		
 
 	def AskQuery(self, request, context):
@@ -49,7 +54,8 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 			answered = False
 			limit = self.partition_last_index[partition_no]
 			i = (limit+1)%len(partition)
-			while i!=limit:
+			tried = 0
+			while tried<len(partition):
 				channel = grpc.insecure_channel(partition[i])
 				stub = route_guide_pb2_grpc.DataNodeStub(channel)
 				request = route_guide_pb2.Query(query=query_string)
@@ -61,9 +67,10 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 					answered = True
 					self.partition_last_index[partition_no] = i 
 					break
-				except grpc.RpcError as e:		
-					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, partition[i], e.code().name))
+				except Exception as e:		
+					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, partition[i], e))
 				i = (i+1)%len(partition)
+				tried += 1
 			
 			if answered == False:
 				print("No response from partition %d!"%(partition_no))
@@ -145,15 +152,15 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 
 		return route_guide_pb2.Document(docid=1,title='name',content='Fail')
 
-	def add_dummy_partition_details(self):  # Dummy function, for local testing
-		self.data_partitions = 1
-		self.data_node_details = {0:[{"ip":"localhost:8087","pending_requests":0}]}
-		self.partition_sizes = {0:1}
-		self.docid_partition = {1:0}
+	# def add_dummy_partition_details(self):  # Dummy function, for local testing
+	# 	self.data_partitions = 1
+	# 	self.data_node_details = {0:[{"ip":"localhost:8087","pending_requests":0}]}
+	# 	self.partition_sizes = {0:1}
+	# 	self.docid_partition = {1:0}
 
-	def select_min_partition(self):
-		# To-DO : select the min partition
-		return 0
+	# def select_min_partition(self):
+	# 	# To-DO : select the min partition
+	# 	return 0
 
 
 	def AddDocuments(self,request,context):
@@ -228,34 +235,70 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		obj = route_guide_pb2.Status(content=ret_message)
 		return obj
 
+	def getMaxID(self):
+		mid = -1
+		for partition_no, partition in enumerate(self.partitions):
+			print("[LOG]for partition no %d:"%(partition_no))
+			for i in range(0, len(partition)):
+				channel = grpc.insecure_channel(partition[i])
+				stub = route_guide_pb2_grpc.DataNodeStub(channel)
+				try:
+					response = stub.getMID(empty_pb2.Empty())
+					mid = max(mid, response.docid)	
+					print("docid - ", mid)
+				except Exception as e:		
+					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, partition[i], e))
+
+		return mid
+
+
+	def sendHeartBeatMessage(self, m_ip):
+		while 1:
+			time.sleep(15)
+			channel = grpc.insecure_channel(m_ip) #localhost:50051
+			stub = route_guide_pb2_grpc.HealthCheckStub(channel)
+			request = route_guide_pb2.HealthCheckRequest(healthCheck = 'is_working?')
+			print("req")
+			try:
+				response = stub.Check(request, timeout = 10)
+				print("Resp - ",response)
+			except Exception as e:
+				print("Err - ",e)
+				MID = self.getMaxID()
+				self.last_doc_id = MID
+				self.kind = "master"
+				return
+
+	# def Check(self, request, context):
+	# 	# self._HEALTH_CHECK_TIME += 1
+	# 	print("received")
+	# 	return route_guide_pb2.HealthCheckResponse(status = "STATUS: Master server up!")
+
+class HealthCheck(route_guide_pb2_grpc.HealthCheckServicer):
+	def __init__(self ):
+		super(HealthCheck,self).__init__()
+		self._HEALTH_CHECK_TIME = 0
+
 	def Check(self, request, context):
-
-		if(self.db == 'master'):
-			self.logger.debug("Received heartbeat query from backup")
-			self._HEALTH_CHECK_TIME += 1
-			return search_pb2.HealthCheckResponse(status = "STATUS: Master server up!")
-
-		# else it is a replica getting health check message from master
-		self.logger.debug("Received heartbeat query from master")
-
-		###
-		#incomplete process
-		###
-
-		return search_pb2.HealthCheckResponse(status = "Replica " + self.ip + " up!", data = indices_to_remove)
-
+		self._HEALTH_CHECK_TIME += 1
+		print("received")
+		return route_guide_pb2.HealthCheckResponse(status = "STATUS: Master server up!")
 
 
 
 def serve():
 	server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 	query_node = QueryNode(args.kind)
+	health_check = HealthCheck()
 	route_guide_pb2_grpc.add_QueryNodeServicer_to_server(query_node, server)
-	route_guide_pb2_grpc.add_HealthCheckServicer_to_server(query_node, server)
+	
 	if args.kind=="master":
+		route_guide_pb2_grpc.add_HealthCheckServicer_to_server(health_check, server)
 		server.add_insecure_port('[::]:50051')
+		print("Starting master")
 	else:
-		server.add_insecure_port('[::]:50052')		
+		server.add_insecure_port('[::]:50052')
+		print("Starting backup")		
 
 	server.start()
 
