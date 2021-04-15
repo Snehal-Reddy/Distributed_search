@@ -1,1 +1,1 @@
-[{"node_list": [{"pending_requests": 0, "ip": "localhost:50061", "status": 1}, {"pending_requests": 0, "ip": "localhost:50062", "status": 1}], "doc_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}, {"node_list": [{"pending_requests": 0, "ip": "localhost:50071", "status": 1}, {"pending_requests": 0, "ip": "localhost:50072", "status": 1}], "doc_list": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]}]
+[["localhost:7081","localhost:7082","localhost:7083"],["localhost:7084","localhost:7085","localhost:7086"],["localhost:8081","localhost:8082","localhost:8083"]]

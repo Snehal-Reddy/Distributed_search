@@ -23,3 +23,7 @@ def perform_search(query,data):
 	return [route_guide_pb2.Result(docid=i,title=titles[i]) for i in range(10)]
 
 
+def add_documents(commit_logs,query,data):
+	## Write steps in commit log, add data and return true/false 
+	return True
+

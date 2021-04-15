@@ -3,6 +3,7 @@ import time
 import math
 import logging
 import grpc
+import json
 
 import route_guide_pb2
 import route_guide_pb2_grpc
@@ -10,11 +11,18 @@ import route_guide_pb2_grpc
 from search_functions import perform_search, add_documents
 
 class DataNode(route_guide_pb2_grpc.DataNodeServicer):
+	
+	def loadData(self):
+		fp = open("data.json", 'r')
+		self.data = json.load(fp)
+		fp.close()
+
+
 	def __init__(self,query_master,query_backup):
 		super(DataNode,self).__init__()
 		self.query_master = grpc.insecure_channel(query_master)
 		self.query_backup = grpc.insecure_channel(query_backup)
-		self.data = None
+		self.data = self.loadData()
 		self.commit_logs = []
 
 	def AskQuery(self, request, context):
@@ -22,18 +30,16 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		for res in results:
 			yield res
 
-	def WriteRequest(self,request_iterator,context):
-		try:
-			add_documents(request_iterator)
-			self.commit_logs.append("success") 		# To-DO : Make the logs message such that it is revertible
+	def WriteRequest(self,request,context):
+		status = add_documents(self.commit_logs,request,self.data)
+		if status == True:
 			return route_guide_pb2.Status(content="AGREED")
-		except Exception as e:
-			print("Exception in local transaction, %s",e)
-			return route_guide_pb2.Status(content="ABORT")
+		else:
+			route_guide_pb2.Status(content="ABORT")
 
 	def WriteReply(self,request,context):
 		if request.content == "ABORT":
-			## undo using logs 		# To-DO : Revert based on log content
+			## undo using logs 
 			pass
 		return route_guide_pb2.Status(content="ACK")
 

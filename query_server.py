@@ -12,7 +12,7 @@ import route_guide_pb2_grpc
 from argparse import ArgumentParser
 import argparse
 
-from search_functions import preprocess_query, aggregate_results
+from search_functions import aggregate_results
 
 parser = argparse.ArgumentParser(description='Query Node')
 parser.add_argument('--kind', type=str, default="master",
@@ -33,50 +33,39 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		fp = open("metadata.json", 'r')
 		self.partitions = json.load(fp)
 		fp.close()
+		self.no_of_partitions = len(self.partitions)
 		self.commit_logs = []
+		self.partition_last_index = [0]*self.no_of_partitions 
+		self.last_doc_id = 0
 		
 
 	def AskQuery(self, request, context):
-
-		# To-DO : use threads to send all requests to data nodes in parallel
 		query_string = request.query
 		print("Received query string : ", query_string)
-		preprocessed_query = preprocess_query(query_string)
 		## Now send to all data nodes
 		all_responses = []
 		for partition_no, partition in enumerate(self.partitions):
-			print("For partition no %d:"%(partition_no))
-			data_nodes = partition['node_list']
-			idx = []
-			load = []
-			for i, node in enumerate(data_nodes):
-				if node["status"] > 0:
-					idx.append(i)
-					load.append(node["pending_requests"])
-			if len(idx) > 0:
-				load, idx = zip(*sorted(zip(load, idx)))
-		
+			print("[LOG]For partition no %d:"%(partition_no))		
 			answered = False
-			for i in idx:
-				data_nodes[i]["pending_requests"] += 1
-				channel = grpc.insecure_channel(data_nodes[i]["ip"])
+			limit = self.partition_last_index[partition_no]
+			i = (limit+1)%len(partition)
+			while i!=limit:
+				channel = grpc.insecure_channel(partition[i])
 				stub = route_guide_pb2_grpc.DataNodeStub(channel)
-				request = route_guide_pb2.Query(query=preprocessed_query)
+				request = route_guide_pb2.Query(query=query_string)
 				try:
 					responses = stub.AskQuery(request)
 					for response in responses:
-						print("ID: %d Title: %s Score: %f"%(response.docid, response.title, response.score))
+						print("[LOG]ID: %d Title: %s Score: %f"%(response.docid, response.title, response.score))
 						all_responses.append(response)
 					answered = True
-					data_nodes[i]["pending_requests"] -= 1
 					break
 				except grpc.RpcError as e:		
-					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, data_nodes[i]["ip"], e.code().name))
-					data_nodes[i]["status"] = -1
+					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, partition[i], e.code().name))
+					i = (i+1)%len(partition)
+			
 			if answered == False:
 				print("No response from partition %d!"%(partition_no))
-				# To-DO : How do we handle this
-			partition['node_list'] = data_nodes 
 
 		final_result = aggregate_results(all_responses)
 		for res in final_result:
@@ -171,20 +160,20 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		return 0
 
 
-	def AddDocuments(self,request_iterator,context):
+	def AddDocuments(self,request,context):
 		"""
 		To - Do : 
 		Write the logs with enough details so that they can be completed after recovery from crash
 		"""
 		## Determine the correct partition to add to
-		min_partition = self.select_min_partition()
+		partition_no = self.last_doc_id%self.no_of_partitions
 		# Initiate 2 phase commit with all these docs
 		all_accepted = True
-		for data_node in self.data_node_details[min_partition]:
-			channel = grpc.insecure_channel(data_node["ip"])
+		for data_node_ip in self.partitions[partition_no]:
+			channel = grpc.insecure_channel(data_node_ip)
 			stub = route_guide_pb2_grpc.DataNodeStub(channel)
 			try:
-				commit_request_response = stub.WriteRequest(request_iterator).content
+				commit_request_response = stub.WriteRequest(request).content
 				if commit_request_response=="ABORT":
 					print("Query server received ABORT from data node -> %s",data_node["ip"])
 					all_accepted = False

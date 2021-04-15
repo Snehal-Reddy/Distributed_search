@@ -28,30 +28,33 @@ def handle_search():
 
 	if answered == False:
 		print("Try with all query servers failed!")
-	# To-DO : Instead of exiting, set a number of times to retry?
 
 
 def handle_write():
+	# docs = []
+	# doc_count = input("How many documents to add? ")
+	# try:
+	# 	doc_count = int(doc_count)
+	# 	if doc_count <= 0:
+	# 		raise Exception("Invalid DocID")			# To-DO : Throw exception and handle that particular exception only
+	# except:
+	# 	print("Invalid input, it must be >0.")
+	# 	return
+	# try:
+	# 	for _ in range(doc_count):
+	# 		docid = input("Enter docid: ")
+	# 		title = input("Enter title: ")
+	# 		content = input("Enter content: ")
+	# 		docid = int(docid) # To-DO : Check for errors here
+	# 		docs.append(route_guide_pb2.Document(docid=docid,title=title,content=content))
+	# except Exception as e:
+	# 	print("Invalid input.")
+	# 	return
 
-	docs = []
-	doc_count = input("How many documents to add? ")
-	try:
-		doc_count = int(doc_count)
-		if doc_count <= 0:
-			1/0
-	except:
-		print("Invalid input, it must be >0.")
-		return
-	try:
-		for _ in range(doc_count):
-			docid = input("Enter docid: ")
-			title = input("Enter title: ")
-			content = input("Enter content: ")
-			docid = int(docid) # To-DO : Check for errors here
-			docs.append(route_guide_pb2.Document(docid=docid,title=title,content=content))
-	except Exception as e:
-		print("Invalid input.")
-		return
+	title = input("Enter title: ")
+	content = input("Enter content: ")
+	docs.append(route_guide_pb2.Document(title=title,content=content))
+
 
 	answered = False
 	for address in ip_list:
@@ -66,21 +69,19 @@ def handle_write():
 				answered = True
 				break
 			# To-DO : Check for other cases.
-		except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly
+		except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly, this is still not sufficient
 			print("Error with query server:", e.code().name)
 
 	if answered == False:
 		print("Try with all query servers failed!")
-	# To-DO : Instead of exiting, set a number of times to retry?
 
 def handle_delete():
-
 	query = input("Enter the DocIDs: ")
 	docIds = []
 	try:
 		for id in query.split():
-			docIds.append(route_guide_pb2.DocumentId(docid=int(id)))
-	except Exception as e:
+			docIds.append(route_guide_pb2.DocumentId(docid=int(id))) 		# To-DO : Check whether query is correct or not
+	except Exception as e: 												# To-DO : Check for particular class of Exception
 		print("Invalid input.")
 		return
 
@@ -106,12 +107,11 @@ def handle_delete():
 
 	if answered == False:
 		print("Try with all query servers failed!")
-	# To-DO : Instead of exiting, set a number of times to retry?
 
 def handle_fetch():
 
 	query = input("Enter the DocID: ")
-	try:
+	try:								# To-DO : Handle this properly
 		docId = int(query)
 	except Exception as e:
 		print("Invalid input.")
@@ -134,22 +134,23 @@ def handle_fetch():
 				print('Documents with the given id does not exist!')
 				answered = True
 				break
-			# To-DO : Check for other cases.
+			# To-DO : Check for other cases. [What other cases???]
 		except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly
 			print("Error with query server:", e.code().name)
 
 	if answered == False:
 		print("Fetch failed or document doesn't exist!")
-	# To-DO : Instead of exiting, set a number of times to retry?
 
+
+##################
 while True:
 	query_type = input("What kind of query?\n1. Search \n2. Add Documents \n3. Delete Documents \n4. Fetch by DocID \n5. Exit \n>> ")
 	try:
 		query_type = int(query_type)
 		if query_type not in [1,2,3,4,5]:
-			1/0
-	except Exception as e:
-		print("Received invalid query type.")
+			raise Exception("Invalid Query Type")
+	except Exception as e:			
+		print("Exception Message ",e) 			
 		continue
 
 	if query_type==1:
