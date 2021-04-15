@@ -20,6 +20,7 @@ def handle_search():
 			responses = stub.AskQuery(request)
 			for response in responses:
 				print("ID: %d :: Title: %s"%(response.docid,response.title))
+				print("ERERE")
 			print("Query Success!")
 			answered = True
 			break
@@ -53,7 +54,7 @@ def handle_write():
 
 	title = input("Enter title: ")
 	content = input("Enter content: ")
-	docs.append(route_guide_pb2.Document(title=title,content=content))
+	doc = route_guide_pb2.Document(title=title,content=content)
 
 
 	answered = False
@@ -62,7 +63,7 @@ def handle_write():
 		stub = route_guide_pb2_grpc.QueryNodeStub(channel)
 		print("Trying %s ..."%(address))
 		try:
-			response = stub.AddDocuments(iter(docs)).content
+			response = stub.AddDocuments(doc).content
 			print("Response:", response.content)
 			if response.content == "OK":
 				print("Write Success!")

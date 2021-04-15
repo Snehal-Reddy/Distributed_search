@@ -11,10 +11,7 @@ def preprocess_query(query):
 	return query.lower()
 
 def aggregate_results(all_responses):
-	response_merge = []
-	for responses in all_responses:
-		response_merge += responses
-	return response_merge
+	return all_responses[:5]
 
 
 def perform_search(query,data):

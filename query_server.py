@@ -62,11 +62,10 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 					break
 				except grpc.RpcError as e:		
 					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, partition[i], e.code().name))
-					i = (i+1)%len(partition)
+				i = (i+1)%len(partition)
 			
 			if answered == False:
 				print("No response from partition %d!"%(partition_no))
-
 		final_result = aggregate_results(all_responses)
 		for res in final_result:
 			yield res

@@ -10,6 +10,17 @@ import route_guide_pb2_grpc
 
 from search_functions import perform_search, add_documents
 
+from argparse import ArgumentParser
+import argparse
+
+parser = argparse.ArgumentParser(description='Query Node')
+parser.add_argument('--port', type=str, default="8081",
+                   help='port for the data node')
+args = parser.parse_args()
+port = args.port
+
+
+
 class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 	
 	def loadData(self):
@@ -63,7 +74,7 @@ def serve():
 	server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 	data_node = DataNode(master_ip,backup_ip)
 	route_guide_pb2_grpc.add_DataNodeServicer_to_server(data_node, server)
-	server.add_insecure_port('[::]:8087')
+	server.add_insecure_port('[::]:%s'%(port))
 	server.start()
 	server.wait_for_termination()
 
