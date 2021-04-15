@@ -79,12 +79,10 @@ def handle_write():
 		print("Try with all query servers failed!")
 
 def handle_delete():
-	query = input("Enter the DocIDs: ")
-	docIds = []
-	try:
-		for id in query.split():
-			docIds.append(route_guide_pb2.DocumentId(docid=int(id))) 		# To-DO : Check whether query is correct or not
-	except Exception as e: 												# To-DO : Check for particular class of Exception
+	query = input("Enter the DocID: ")
+	try:								# To-DO : Handle this properly
+		docId = int(query)
+	except Exception as e:
 		print("Invalid input.")
 		return
 
@@ -92,9 +90,10 @@ def handle_delete():
 	for address in ip_list:
 		channel = grpc.insecure_channel(address)
 		stub = route_guide_pb2_grpc.QueryNodeStub(channel)
+		request = route_guide_pb2.DocumentId(docid=docId)
 		print("Trying %s ..."%(address))
 		try:
-			response = stub.DeleteDocuments(iter(docIds)).content
+			response = stub.DeleteDocument(request)
 			print("Response:", response.content)
 			if response.content == "OK":
 				print("Delete Success!")
@@ -105,9 +104,11 @@ def handle_delete():
 				answered = True
 				break
 			# To-DO : Check for other cases.
-		except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly
-			print("Error with query server:", e.code().name)
 
+		# except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly
+		# 	print("Error with query server:", e.code().name)
+		except Exception as e:
+			print(e)
 	if answered == False:
 		print("Try with all query servers failed!")
 
@@ -138,8 +139,10 @@ def handle_fetch():
 				answered = True
 				break
 			# To-DO : Check for other cases. [What other cases???]
-		except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly
-			print("Error with query server:", e.code().name)
+		except Exception as e:
+			print(e)
+		# except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly
+		# 	print("Error with query server:", e.code().name)
 
 	if answered == False:
 		print("Fetch failed or document doesn't exist!")

@@ -59,6 +59,7 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 						print("[LOG]ID: %d Title: %s Score: %f"%(response.docid, response.title, response.score))
 						all_responses.append(response)
 					answered = True
+					self.partition_last_index[partition_no] = i 
 					break
 				except grpc.RpcError as e:		
 					print("Error with partition number %d DataNodeIP %s Exception::::%s "%(partition_no, partition[i], e.code().name))
@@ -70,30 +71,27 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		for res in final_result:
 			yield res
 
-	def DeleteDocuments(self,request,context):
+	def DeleteDocument(self,request,content):
 		docid = int(request.docid)
 		print('Deleting doc with id: ',docid)
-		partition_no = -1
-		for pno, partition in enumerate(self.partitions):
-			if docid in partition['doc_list']:
-				partition_no = pno
-		if partition_no == -1:
-			print('Invalid docid')
-			yield  route_guide_pb2.Status(content='DNE')
-			return
+		 
+		partition_no = docid%self.no_of_partitions
+		print("Parittion Number : ",partition_no)
 
 		commit = True
 
-		for data_node in self.data_node_details[partition_no]:
-			channel = grpc.insecure_channel(data_node["ip"])
+		for data_node_ip in self.partitions[partition_no]:
+			channel = grpc.insecure_channel(data_node_ip)
 			stub = route_guide_pb2_grpc.DataNodeStub(channel) 
 			try:
 				commit_request_response = stub.DeleteRequest(request)
 				if commit_request_response.content=='ABORT':
 					commit = False
-					print("Query server received ABORT from data node -> %s",data_node["ip"])
+					print("Query server received ABORT from data node -> %s",data_node_ip)
+				else:
+					print("Received %s from %s"%(commit_request_response,data_node_ip))
 			except grpc.RpcError as e:		
-				print("Error with data node",partition_no,data_node["ip"], e.code().name)
+				print("Error with data node",partition_no,data_node_ip, e.code().name)
 				commit = False
 
 		commit_message = None
@@ -103,49 +101,48 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		else:
 			self.commit_logs.append("abort")
 			commit_message = "ABORT"
+		print("COORDINATOR TO COHORT FOR 2 phase commit: ",commit_message)
 
-		print("COMMIT MESSAGE : ",commit_message)
-		def send_commit_reply(details):
-			ip = details["ip"]
-			message = details["message"]
-			channel = grpc.insecure_channel(data_node["ip"])
+		for ip in self.partitions[partition_no]:
+			channel = grpc.insecure_channel(ip)
 			stub = route_guide_pb2_grpc.DataNodeStub(channel)
 			while True:
 				try:
-					ack = stub.DeleteReply(route_guide_pb2.Status(content=message,timeout=5))
-					return
+					ack = stub.DeleteReply(route_guide_pb2.Status(content=commit_message))
+					break
 				except Exception as e:
-					pass
-
-		reply_list = [(i["ip"],commit_message) for i in self.data_node_details[partition_no]]
-		with ThreadPoolExecutor(4) as executor:
-		    results = executor.map(send_commit_reply, reply_list)
+					print("Exception : ",e)
 
 		self.commit_logs.append("complete")
 		ret_message = "OK"
 		if commit_message=="ABORT":
-			ret_message=='Fail'
-		return route_guide_pb2.Status(content=ret_message)		
+			ret_message = "NOTOK"
+		print("Return obj")
+		obj = route_guide_pb2.Status(content=ret_message)
+		return obj
 
-	def FetchDocuments(self,request,content):
+
+	def FetchDocuments(self,request,context):
 		docid = int(request.docid)
+		partition_no = (docid)%self.no_of_partitions
 		print('fetching %d'%(request.docid))
-		if docid not in self.docid_partition:
-			print('Invalid fetch')
-			return route_guide_pb2.Document(docid=1,title='name',content='Document doesn\'t exist')
-		partition_no = self.docid_partition[docid]
-
-		for data_node in self.data_node_details[partition_no]:
-			channel = grpc.insecure_channel(data_node["ip"])
+		limit = self.partition_last_index[partition_no]
+		partition = self.partitions[partition_no]
+		i = (limit+1)%len(partition)
+		print(i)
+		while i!=limit:
+			channel = grpc.insecure_channel(partition[i])
 			stub = route_guide_pb2_grpc.DataNodeStub(channel) 
 			try:
 				responses = stub.FetchDocuments(request)
 				if responses.content!='Fail':
+					self.partition_last_index[partition_no] = i
 					return responses
 			except Exception as e:		## To-Do => Try with different data nodes of same partition
-				print("Error with data node",partition_no,data_nodes[i]["ip"],e)
+				print("Error with data node",partition_no,data_node,e)
 				exit()
-		
+			i = (i+1)%len(partition)
+
 		return route_guide_pb2.Document(docid=1,title='name',content='Fail')
 
 	def add_dummy_partition_details(self):  # Dummy function, for local testing

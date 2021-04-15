@@ -85,7 +85,7 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		return route_guide_pb2.Status(content="AGREED")
 	
 	def DeleteReply(self, request, context):
-		print(request.docid)
+		# print(request.docid)
 		return route_guide_pb2.Status(content="ACK")
 
 	def FetchDocuments(self,request,content):

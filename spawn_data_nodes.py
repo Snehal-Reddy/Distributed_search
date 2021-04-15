@@ -7,7 +7,7 @@ with open("metadata.json","r") as r:
 	dc = json.loads(r.read())
 
 def run_data_node(port,pno,nno):
-	os.system("python data_node.py --port %s > %d_%d.txt"%(port,pno,nno))
+	os.system("python3 data_node.py --port %s > %d_%d.txt"%(port,pno,nno))
 
 t_list = []
 for pno,partition in enumerate(dc):
