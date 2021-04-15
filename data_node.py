@@ -24,10 +24,21 @@ port = args.port
 class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 	
 	def loadData(self):
-		fp = open("data.json", 'r')
-		self.data = json.load(fp)
-		fp.close()
+		# fp = open("data_%s.json"%port, 'w+')
+		# self.data = json.load(fp)
+		# fp.close()
+		with open("data_%s.json"%port,"w+") as op:
+			dc = op.read()
 
+		try:
+			self.data = json.loads(dc)
+		except json.decoder.JSONDecodeError:
+			print("Dataset invalid, resetting")
+			self.data = []
+
+	def writeData(self):
+		with open("data_%s.json"%port,"w") as w:
+			w.write(json.dumps(self.data))
 
 	def __init__(self,query_master,query_backup):
 		super(DataNode,self).__init__()
@@ -42,7 +53,10 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 			yield res
 
 	def WriteRequest(self,request,context):
-		status = add_documents(self.commit_logs,request,self.data)
+		try:
+			status = add_documents(self.commit_logs,request,self.data)
+		except Exception as e:
+			print("Exception : ",e)
 		if status == True:
 			return route_guide_pb2.Status(content="AGREED")
 		else:
@@ -52,6 +66,9 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		if request.content == "ABORT":
 			## undo using logs 
 			pass
+
+		elif request.content == "COMMIT":
+			self.writeData()
 		return route_guide_pb2.Status(content="ACK")
 
 	def DeleteRequest(self, request, context):

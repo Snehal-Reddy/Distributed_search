@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"5\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\r\n\x05score\x18\x03 \x01(\x01\"\x19\n\x06Status\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\"*\n\x08\x44ocument\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"\x1b\n\nDocumentId\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\"!\n\x0f\x41\x63knowledgement\x12\x0e\n\x06status\x18\x07 \x01(\x05\"\x16\n\x08IsMaster\x12\n\n\x02ip\x18\x01 \x01(\t\")\n\x12HealthCheckRequest\x12\x13\n\x0bhealthCheck\x18\x01 \x01(\t\"3\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xab\x01\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0c\x41\x64\x64\x44ocuments\x12\t.Document\x1a\x07.Status\"\x00\x12+\n\x0f\x44\x65leteDocuments\x12\x0b.DocumentId\x1a\x07.Status\"\x00(\x01\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\xed\x01\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0cWriteRequest\x12\t.Document\x1a\x07.Status\"\x00\x12 \n\nWriteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12)\n\rDeleteRequest\x12\x0b.DocumentId\x1a\x07.Status\"\x00(\x01\x12!\n\x0b\x44\x65leteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\x41\n\x0bHealthCheck\x12\x32\n\x05\x43heck\x12\x13.HealthCheckRequest\x1a\x14.HealthCheckResponse2;\n\x0cLeaderNotice\x12+\n\x0cMasterChange\x12\t.IsMaster\x1a\x10.Acknowledgementb\x06proto3'
+  serialized_pb=b'\n\x11route_guide.proto\"\x16\n\x05Query\x12\r\n\x05query\x18\x01 \x01(\t\"5\n\x06Result\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\r\n\x05score\x18\x03 \x01(\x01\"\x19\n\x06Status\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\"9\n\x08\x44ocument\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"\x1b\n\nDocumentId\x12\r\n\x05\x64ocid\x18\x01 \x01(\x05\"!\n\x0f\x41\x63knowledgement\x12\x0e\n\x06status\x18\x07 \x01(\x05\"\x16\n\x08IsMaster\x12\n\n\x02ip\x18\x01 \x01(\t\")\n\x12HealthCheckRequest\x12\x13\n\x0bhealthCheck\x18\x01 \x01(\t\"3\n\x13HealthCheckResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xab\x01\n\tQueryNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0c\x41\x64\x64\x44ocuments\x12\t.Document\x1a\x07.Status\"\x00\x12+\n\x0f\x44\x65leteDocuments\x12\x0b.DocumentId\x1a\x07.Status\"\x00(\x01\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\xed\x01\n\x08\x44\x61taNode\x12\x1f\n\x08\x41skQuery\x12\x06.Query\x1a\x07.Result\"\x00\x30\x01\x12$\n\x0cWriteRequest\x12\t.Document\x1a\x07.Status\"\x00\x12 \n\nWriteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12)\n\rDeleteRequest\x12\x0b.DocumentId\x1a\x07.Status\"\x00(\x01\x12!\n\x0b\x44\x65leteReply\x12\x07.Status\x1a\x07.Status\"\x00\x12*\n\x0e\x46\x65tchDocuments\x12\x0b.DocumentId\x1a\t.Document\"\x00\x32\x41\n\x0bHealthCheck\x12\x32\n\x05\x43heck\x12\x13.HealthCheckRequest\x1a\x14.HealthCheckResponse2;\n\x0cLeaderNotice\x12+\n\x0cMasterChange\x12\t.IsMaster\x1a\x10.Acknowledgementb\x06proto3'
 )
 
 
@@ -144,15 +144,22 @@ _DOCUMENT = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='title', full_name='Document.title', index=0,
-      number=1, type=9, cpp_type=9, label=1,
+      name='docid', full_name='Document.docid', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='title', full_name='Document.title', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='content', full_name='Document.content', index=1,
-      number=2, type=9, cpp_type=9, label=1,
+      name='content', full_name='Document.content', index=2,
+      number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -170,7 +177,7 @@ _DOCUMENT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=127,
-  serialized_end=169,
+  serialized_end=184,
 )
 
 
@@ -201,8 +208,8 @@ _DOCUMENTID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=171,
-  serialized_end=198,
+  serialized_start=186,
+  serialized_end=213,
 )
 
 
@@ -233,8 +240,8 @@ _ACKNOWLEDGEMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=200,
-  serialized_end=233,
+  serialized_start=215,
+  serialized_end=248,
 )
 
 
@@ -265,8 +272,8 @@ _ISMASTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=235,
-  serialized_end=257,
+  serialized_start=250,
+  serialized_end=272,
 )
 
 
@@ -297,8 +304,8 @@ _HEALTHCHECKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=259,
-  serialized_end=300,
+  serialized_start=274,
+  serialized_end=315,
 )
 
 
@@ -336,8 +343,8 @@ _HEALTHCHECKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=302,
-  serialized_end=353,
+  serialized_start=317,
+  serialized_end=368,
 )
 
 DESCRIPTOR.message_types_by_name['Query'] = _QUERY
@@ -423,8 +430,8 @@ _QUERYNODE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=356,
-  serialized_end=527,
+  serialized_start=371,
+  serialized_end=542,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -479,8 +486,8 @@ _DATANODE = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=530,
-  serialized_end=767,
+  serialized_start=545,
+  serialized_end=782,
   methods=[
   _descriptor.MethodDescriptor(
     name='AskQuery',
@@ -555,8 +562,8 @@ _HEALTHCHECK = _descriptor.ServiceDescriptor(
   index=2,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=769,
-  serialized_end=834,
+  serialized_start=784,
+  serialized_end=849,
   methods=[
   _descriptor.MethodDescriptor(
     name='Check',
@@ -581,8 +588,8 @@ _LEADERNOTICE = _descriptor.ServiceDescriptor(
   index=3,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=836,
-  serialized_end=895,
+  serialized_start=851,
+  serialized_end=910,
   methods=[
   _descriptor.MethodDescriptor(
     name='MasterChange',

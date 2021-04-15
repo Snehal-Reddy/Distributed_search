@@ -7,7 +7,6 @@ def preprocess_query(query):
 	O/p : preprocessed query string
 	whatever preprocessing you do, change message formats accordingly
 	"""
-
 	return query.lower()
 
 def aggregate_results(all_responses):
@@ -15,12 +14,17 @@ def aggregate_results(all_responses):
 
 
 def perform_search(query,data):
-	arr = list(range(10))
-	titles = "abcdefghij"
-	return [route_guide_pb2.Result(docid=i,title=titles[i]) for i in range(10)]
+	res = []
+	for docs in data:
+		if docs["content"].startswith(query):
+			res.append(route_guide_pb2.Result(docid=docs["docid"],title=docs["title"],score=0))
+	
+	return res
 
 
 def add_documents(commit_logs,query,data):
 	## Write steps in commit log, add data and return true/false 
+	commit_logs.append("inserting docid %d"%query.docid)
+	data.append({"docid":query.docid,"title":query.title,"content":query.content})
 	return True
 

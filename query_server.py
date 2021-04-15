@@ -166,6 +166,9 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		"""
 		## Determine the correct partition to add to
 		partition_no = self.last_doc_id%self.no_of_partitions
+		print("PNO : ",partition_no)
+		request.docid = self.last_doc_id
+		self.last_doc_id += 1
 		# Initiate 2 phase commit with all these docs
 		all_accepted = True
 		for data_node_ip in self.partitions[partition_no]:
@@ -174,12 +177,14 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 			try:
 				commit_request_response = stub.WriteRequest(request).content
 				if commit_request_response=="ABORT":
-					print("Query server received ABORT from data node -> %s",data_node["ip"])
+					print("Query server received ABORT from data node -> %s",data_node_ip)
 					all_accepted = False
+				else:
+					print("Received %s from %s"%(commit_request_response,data_node_ip))
 			except Exception as e:
 				## What to do here?
 				all_accepted = False
-				print("Error in COMMIT_REQUEST with data node %s, exception message : %s"%(data_node["ip"],e))
+				print("Error in COMMIT_REQUEST with data node %s, exception message : %s"%(data_node_ip,e))
 		
 		send_message = None
 		if all_accepted==True:
@@ -188,29 +193,42 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		else:
 			self.commit_logs.append("abort")
 			send_message = "ABORT"
-		print("SEND MESSAGE : ",send_message)
+		print("COORDINATOR TO COHORT FOR 2 phase commit: ",send_message)
 		# send messages to all data nodes and wait for their replies [use threads]
-		def send_commit_reply(details):
-			ip = details["ip"]
-			message = details["message"]
-			channel = grpc.insecure_channel(data_node["ip"])
+		# def send_commit_reply(details):
+		# 	ip = details[0]
+		# 	message = details[1]
+		# 	channel = grpc.insecure_channel(ip)
+		# 	stub = route_guide_pb2_grpc.DataNodeStub(channel)
+		# 	while True:
+		# 		try:
+		# 			ack = stub.WriteReply(route_guide_pb2.Status(content=message))
+		# 			return
+		# 		except Exception as e:
+		# 			pass
+
+		# reply_list = [(ip,send_message) for ip in self.partitions[partition_no]]
+		# with ThreadPoolExecutor(4) as executor:
+		#     results = executor.map(send_commit_reply, reply_list)
+
+		for ip in self.partitions[partition_no]:
+			channel = grpc.insecure_channel(ip)
 			stub = route_guide_pb2_grpc.DataNodeStub(channel)
 			while True:
 				try:
-					ack = stub.WriteReply(route_guide_pb2.Status(content=message,timeout=5))
-					return
+					ack = stub.WriteReply(route_guide_pb2.Status(content=send_message))
+					break
 				except Exception as e:
-					pass
+					print("Exception : ",e)
 
-		reply_list = [(i["ip"],send_message) for i in self.data_node_details[min_partition]]
-		with ThreadPoolExecutor(4) as executor:
-		    results = executor.map(send_commit_reply, reply_list)
 
+		print('We are here now')
 		self.commit_logs.append("complete")
 		ret_message = "OK"
 		if send_message=="ABORT":
 			ret_message = "NOTOK"
-		return route_guide_pb2.Status(content=ret_message)
+		obj = route_guide_pb2.Status(content=ret_message)
+		return obj
 
 	def Check(self, request, context):
 

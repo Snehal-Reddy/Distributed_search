@@ -70,8 +70,10 @@ def handle_write():
 				answered = True
 				break
 			# To-DO : Check for other cases.
-		except grpc.RpcError as e: 		# To-DO : See kind of exceptions and handle them separately and correctly, this is still not sufficient
-			print("Error with query server:", e.code().name)
+			elif response.content == "NOTOK":
+				print("Write fail two phase commit decision abort")
+		except Exception as e: 		# To-DO : See kind of exceptions and handle them separately and correctly, this is still not sufficient
+			print("Error with query server:", e)
 
 	if answered == False:
 		print("Try with all query servers failed!")
