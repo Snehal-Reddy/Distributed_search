@@ -84,16 +84,33 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		return route_guide_pb2.Status(content="ACK")
 
 	def DeleteRequest(self, request, context):
-		print(request.docid)
+		print("To Delete : ",request.docid)
+		for doc in self.data:
+			if doc["docid"] == request.docid:
+				break
+
+		try:
+			del doc
+		except Exception as e:
+			print("Data node delete error",e)
 		return route_guide_pb2.Status(content="AGREED")
 	
 	def DeleteReply(self, request, context):
 		# print(request.docid)
+		if request.content=="ABORT":
+			pass
+
+		elif request.content == "COMMIT":
+			self.writeData() 
 		return route_guide_pb2.Status(content="ACK")
 
 	def FetchDocuments(self,request,content):
 		print('recvd')
-		return 	route_guide_pb2.Document(docid=1,title='title',content="Jello world")
+		for doc in self.data:
+			if doc["docid"]==request.docid:
+				return 	route_guide_pb2.Document(docid=doc["docid"],title=doc['title'],content=doc["content"])
+
+		return route_guide_pb2.Document(docid=-1,title="Not found",content="DOCID NOT FOUND")
 
 	def getMID(self, request, context):
 		return route_guide_pb2.DocumentId(docid=self.mid)
