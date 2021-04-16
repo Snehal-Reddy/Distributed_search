@@ -56,6 +56,7 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		# self.data = []
 		self.mid = 0 		## To-Do : loadData()
 		self.commit_logs = [] 
+		self.write_doc = None
 
 	def AskQuery(self, request, context):
 		results = perform_search(request.query,self.data)
@@ -65,6 +66,7 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 	def WriteRequest(self,request,context):
 		try:
 			status = add_documents(self.commit_logs,request,self.data)
+			self.write_doc = {"docid":request.docid,"title":request.title,"content":request.content}	
 			self.mid = max(self.mid, request.docid)+1
 
 		except Exception as e:
@@ -80,6 +82,10 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 			pass
 
 		elif request.content == "COMMIT":
+			print("HERE, writ doc ",self.write_doc)
+			if self.write_doc is not None:
+				print("HERE inside if")
+				self.data.append(self.write_doc)
 			self.writeData()
 		return route_guide_pb2.Status(content="ACK")
 

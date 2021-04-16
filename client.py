@@ -20,7 +20,6 @@ def handle_search():
 			responses = stub.AskQuery(request)
 			for response in responses:
 				print("ID: %d :: Title: %s"%(response.docid,response.title))
-				print("ERERE")
 			print("Query Success!")
 			answered = True
 			break

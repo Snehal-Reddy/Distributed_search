@@ -37,11 +37,14 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		self.commit_logs = []
 		self.partition_last_index = [0]*self.no_of_partitions 
 		self.last_doc_id = 0
+		self.isMasterAlive = True
 		if(self.kind=='backup'):
 			try:
 				_thread.start_new_thread(self.sendHeartBeatMessage, ("localhost:50051",))
 			except Exception as e:
 				print("[LOG]"+str(e))
+
+
 		
 
 	def AskQuery(self, request, context):
@@ -113,12 +116,13 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		for ip in self.partitions[partition_no]:
 			channel = grpc.insecure_channel(ip)
 			stub = route_guide_pb2_grpc.DataNodeStub(channel)
-			while True:
+			for abc in range(10):
 				try:
 					ack = stub.DeleteReply(route_guide_pb2.Status(content=commit_message))
 					break
 				except Exception as e:
 					print("Exception : ",e)
+					time.sleep(1)
 
 		self.commit_logs.append("complete")
 		ret_message = "OK"
@@ -218,12 +222,14 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 		for ip in self.partitions[partition_no]:
 			channel = grpc.insecure_channel(ip)
 			stub = route_guide_pb2_grpc.DataNodeStub(channel)
-			while True:
+
+			for abc in range(10):
 				try:
 					ack = stub.WriteReply(route_guide_pb2.Status(content=send_message))
 					break
 				except Exception as e:
 					print("Exception : ",e)
+					time.sleep(1)
 
 
 		print('We are here now')
@@ -262,11 +268,13 @@ class QueryNode(route_guide_pb2_grpc.QueryNodeServicer):
 			try:
 				response = stub.Check(request, timeout = 10)
 				print("Resp - ",response)
+				self.isMasterAlive = True
 			except Exception as e:
 				print("Err - ",e)
 				MID = self.getMaxID()
 				self.last_doc_id = MID
-				self.kind = "master"
+				# self.kind = "master"
+				self.isMasterAlive = False
 				return
 
 	# def Check(self, request, context):
