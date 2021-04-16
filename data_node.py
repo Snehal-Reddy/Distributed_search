@@ -87,20 +87,25 @@ class DataNode(route_guide_pb2_grpc.DataNodeServicer):
 		print("To Delete : ",request.docid)
 		for doc in self.data:
 			if doc["docid"] == request.docid:
-				break
+				self.to_remove = request.docid
+				return route_guide_pb2.Status(content="AGREED")
+		
+		return route_guide_pb2.Status(content="ABORT")
 
-		try:
-			del doc
-		except Exception as e:
-			print("Data node delete error",e)
-		return route_guide_pb2.Status(content="AGREED")
-	
 	def DeleteReply(self, request, context):
 		# print(request.docid)
 		if request.content=="ABORT":
 			pass
 
 		elif request.content == "COMMIT":
+			for doc in self.data:
+				if doc["docid"] == self.to_remove:
+					break
+
+			try:
+				self.data.remove(doc)
+			except Exception as e:
+				print("Error in deleting after commit",e)
 			self.writeData() 
 		return route_guide_pb2.Status(content="ACK")
 
